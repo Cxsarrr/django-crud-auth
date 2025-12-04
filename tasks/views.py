@@ -1,5 +1,5 @@
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 
@@ -36,3 +36,12 @@ def signup(request):
 
 def tasks(request):
     return render(request, "tasks.html")
+
+
+def signout(request):
+    logout(request)
+    return redirect("home.html")
+
+
+def signin(request):
+    return render(request, "signin.html", {"form": AuthenticationForm})
