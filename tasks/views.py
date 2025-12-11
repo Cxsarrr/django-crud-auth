@@ -1,4 +1,4 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
@@ -44,4 +44,23 @@ def signout(request):
 
 
 def signin(request):
-    return render(request, "signin.html", {"form": AuthenticationForm})
+    if request.method == "GET":
+        return render(request, "signin.html", {"form": AuthenticationForm})
+    else:
+        user = authenticate(
+            request,
+            username=request.POST["username"],
+            password=request.POST["password"],
+        )
+        if user is None:
+            return render(
+                request,
+                "signin.html",
+                {
+                    "form": AuthenticationForm,
+                    "error": "Username or password is incorrect",
+                },
+            )
+        else:
+            login(request, user)
+            return redirect("tasks")
